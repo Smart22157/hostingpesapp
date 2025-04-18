@@ -1,0 +1,88 @@
+/* styles/adminPayments.css */
+
+.admin-payments-container {
+    max-width: 1300px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+  }
+  
+  .admin-payments-container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  
+  thead {
+    background-color: #667eea;
+    color: #ffffff;
+  }
+  
+  th,
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+  }
+  
+  tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #48bb78;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #38a169;
+  }
+  
+  .status-cleared {
+    color: #38a169;
+    font-weight: bold;
+  }
+  
+  .status-pending {
+    color: #d69e2e;
+    font-weight: bold;
+  }
+  
+  .ready-to-ship {
+    color: #2b6cb0;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .admin-payments-container {
+      padding: 1rem;
+    }
+  
+    th,
+    td {
+      font-size: 0.85rem;
+      padding: 0.75rem;
+    }
+  
+    button {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+    }
+  }
+  

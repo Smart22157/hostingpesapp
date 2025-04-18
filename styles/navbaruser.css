@@ -1,0 +1,53 @@
+.navbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center the nav links */
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    border-radius: 0 0 1rem 1rem;
+    width: 100%;
+  }
+  
+  /* Position the logo on the left */
+  .logo {
+    position: absolute;
+    left: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Centered nav links */
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Nav links styling */
+  .navbar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  
+  /* Hover effects with 3D feel */
+  .navbar a:hover {
+    background: rgba(255, 255, 255, 0.35);
+    color: #000;
+    transform: perspective(400px) translateZ(10px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  
