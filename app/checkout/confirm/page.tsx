@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 type Status = 'Pending' | 'Success' | 'Failed';
 
-export default function ConfirmationPage() {
+const ConfirmationPage = () => {
   const params = useSearchParams();
   const requestId = params.get('requestId')!;
   const [status, setStatus] = useState<Status>('Pending');
@@ -13,8 +13,6 @@ export default function ConfirmationPage() {
   const router = useRouter();
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
     const checkStatus = async () => {
       try {
         const res = await fetch(`http://localhost:5000/mpesa/status/${requestId}`);
@@ -22,18 +20,17 @@ export default function ConfirmationPage() {
         setStatus(data.status);
         setMessage(data.message);
         if (data.status !== 'Pending') {
-          clearInterval(interval);
+          clearInterval(interval); // Clear the interval if status is not pending
         }
       } catch (err) {
         console.error('Status check failed', err);
       }
     };
 
-    // Poll every 3 seconds
-    interval = setInterval(checkStatus, 3000);
-    checkStatus(); // initial call
+    const interval = setInterval(checkStatus, 3000); // Poll every 3 seconds
+    checkStatus(); // Initial call to check status
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, [requestId]);
 
   return (
@@ -50,4 +47,15 @@ export default function ConfirmationPage() {
       )}
     </div>
   );
-}
+};
+
+// Wrap the ConfirmationPage in a Suspense boundary
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmationPage />
+    </Suspense>
+  );
+};
+
+export default Page;

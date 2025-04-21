@@ -29,7 +29,7 @@ const LoginPage = () => {
       localStorage.setItem('userId', data.userId);
       localStorage.removeItem('cart');
       router.push('/products');
-    } catch (err) {
+    } catch {
       setError('Login failed. Please try again.');
     }
   };
@@ -63,7 +63,7 @@ const LoginPage = () => {
       </form>
 
       <div className="auth-footer">
-        Don't have an account? <a href="/signup">Register here</a>
+        Don&rsquo;t have an account? <a href="/signup">Register here</a>
       </div>
     </div>
   );

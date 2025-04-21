@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import '../../../styles/product.css';
 import '../../../styles/navbar.css';
 import AdminNavbar from '@/app/Navbar';
+import Image from 'next/image'; // Import Image from next/image
 
 interface Product {
   _id: string;
@@ -19,9 +20,6 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [totalStock, setTotalStock] = useState(0);
-  const [goodsSoldWeek, setGoodsSoldWeek] = useState(0);
-  const [goodsSoldMonth, setGoodsSoldMonth] = useState(0);
   const [form, setForm] = useState<Product>({
     _id: '',
     name: '',
@@ -33,7 +31,7 @@ const AdminDashboard = () => {
   });
   const [message, setMessage] = useState('');
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch('http://localhost:5001/products', {
@@ -51,24 +49,16 @@ const AdminDashboard = () => {
       }
       const data = await res.json();
       setProducts(data);
-      calculateMetrics(data);
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setLoading(false);
     }
-  };
-
-  const calculateMetrics = (data: Product[]) => {
-    const total = data.reduce((acc, product) => acc + product.quantity, 0);
-    setTotalStock(total);
-    setGoodsSoldWeek(0); // Replace with actual calculation
-    setGoodsSoldMonth(0); // Replace with actual calculation
-  };
+  }, []);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]); // Include fetchProducts in the dependency array
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -156,7 +146,6 @@ const AdminDashboard = () => {
 
   if (loading) return <p>Loading products...</p>;
   if (error) return <p>Error: {error}</p>;
-
   return (
     <>
       <AdminNavbar />
@@ -225,7 +214,7 @@ const AdminDashboard = () => {
               <p className="admin-product-price">Ksh{product.price.toFixed(2)}</p>
               <p>Quantity: {product.quantity}</p>
               {product.imageUrl && (
-                <img src={`http://localhost:3000${product.imageUrl}`} alt={product.name} className="product-image" />
+                <Image src={`http://localhost:3000${product.imageUrl}`} alt={product.name} width={200} height={200} className="product-image" />
               )}
               <button
                 onClick={() => handleEditProduct(product)}

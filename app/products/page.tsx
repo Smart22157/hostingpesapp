@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import '../../styles/productuser.css';
 
 interface Product {
@@ -53,7 +54,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     fetchProducts();
-    fetchCartItems(); // Fetch cart items on component mount
+    fetchCartItems();
   }, []);
 
   const handleAddToCart = async (product: Product) => {
@@ -75,7 +76,6 @@ const ProductPage = () => {
       const cartItem = await response.json();
       console.log('Item added to cart:', cartItem);
 
-      // Update local cart state
       setCartItems(prevCart => {
         const existing = prevCart.find(item => item._id === product._id);
         if (existing) {
@@ -113,9 +113,11 @@ const ProductPage = () => {
             <p className="product-category">{product.category}</p>
             <p className="product-price">Ksh{product.price.toFixed(2)}</p>
             {product.imageUrl && (
-              <img
+              <Image
                 src={`http://localhost:3000${product.imageUrl}`}
                 alt={product.name}
+                width={200}
+                height={200}
                 className="product-image"
               />
             )}

@@ -30,13 +30,13 @@ const AdminPaymentsPage = () => {
       if (!res.ok) throw new Error('Failed to fetch payments');
       const data = await res.json();
       setPayments(data);
-    } catch (err) {
-      setError('Error loading payments');
+    } catch (error) { 
+      setError('Error loading payments'); 
+      console.error('Error fetching payments:', error); 
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchPayments();
   }, []);

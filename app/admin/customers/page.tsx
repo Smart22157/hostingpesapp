@@ -40,9 +40,14 @@ const AdminCustomersPage = () => {
         console.log('✅ Customers:', data);
         setCustomers(data); // ✅ Set state with fetched customers
         setLoading(false);
-      } catch (err: any) {
-        console.error('❌ Fetch customers error:', err.message);
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error('❌ Fetch customers error:', err.message);
+          setError(err.message);
+        } else {
+          console.error('❌ Fetch customers error:', 'An unknown error occurred');
+          setError('An unknown error occurred');
+        }
         setLoading(false);
       }
     };

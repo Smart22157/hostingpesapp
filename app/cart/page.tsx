@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // Import Image from next/image
 import '../../styles/cart.css';
 
 interface CartItem {
@@ -38,7 +39,8 @@ const CartPage = () => {
 
       const data = await res.json();
       setCartItems(data);
-    } catch (err) {
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
       setError('Failed to load cart items. Please try again later.');
     } finally {
       setLoading(false);
@@ -67,7 +69,8 @@ const CartPage = () => {
       if (!res.ok) throw new Error('Failed to delete item');
 
       setCartItems(prev => prev.filter(item => item._id !== id));
-    } catch {
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
       setError('Failed to remove item from cart. Please try again.');
     }
   };
@@ -90,7 +93,8 @@ const CartPage = () => {
       setCartItems(prev =>
         prev.map(item => (item._id === id ? { ...item, quantity } : item))
       );
-    } catch {
+    } catch (error) {
+      console.error('Error updating quantity:', error);
       setError('Failed to update quantity. Please try again.');
     }
   };
@@ -112,10 +116,12 @@ const CartPage = () => {
           <div className="cart-list">
             {cartItems.map(item => (
               <div key={item._id} className="cart-item">
-                <img
+                <Image
                   src={item.imageUrl ? `http://localhost:3000${item.imageUrl}` : '/placeholder.png'}
                   alt={item.name}
                   className="cart-item-image"
+                  width={100} // Set appropriate width
+                  height={100} // Set appropriate height
                 />
                 <div className="cart-item-details">
                   <h3 className="cart-item-name">{item.name}</h3>
@@ -135,10 +141,6 @@ const CartPage = () => {
                   >
                     Remove
                   </button>
-
-
-
-                  
                 </div>
               </div>
             ))}

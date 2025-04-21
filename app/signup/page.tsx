@@ -28,6 +28,7 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, phoneNumber }),
       });
+
       const data = await res.json();
       if (res.ok) {
         setMessage('Signup successful! You can now log in.');
@@ -37,8 +38,8 @@ const Signup = () => {
       } else {
         setMessage(data.message || 'Signup failed');
       }
-    } catch (error) {
-      setMessage('An error occurred');
+    } catch {
+      setMessage('An error occurred. Please try again.');
     }
   };
 
