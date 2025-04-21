@@ -113,13 +113,13 @@ const CartPage = () => {
             {cartItems.map(item => (
               <div key={item._id} className="cart-item">
                 <img
-                  src={item.imageUrl ? `http://localhost:5001${item.imageUrl}` : '/placeholder.png'}
+                  src={item.imageUrl ? `http://localhost:3000${item.imageUrl}` : '/placeholder.png'}
                   alt={item.name}
                   className="cart-item-image"
                 />
                 <div className="cart-item-details">
                   <h3 className="cart-item-name">{item.name}</h3>
-                  <p className="cart-item-price">${item.price.toFixed(2)}</p>
+                  <p className="cart-item-price">Ksh.{item.price.toFixed(2)}</p>
                   <label className="cart-item-quantity">
                     Qty:
                     <input
@@ -135,6 +135,10 @@ const CartPage = () => {
                   >
                     Remove
                   </button>
+
+
+
+                  
                 </div>
               </div>
             ))}

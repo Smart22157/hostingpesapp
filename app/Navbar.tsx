@@ -13,12 +13,13 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-    <div className="logo">Pes Electronic</div> {/* Optional logo div */}
+    <div className="logo">Pes Electronic</div> {}
     <ul>
       <li><Link href="/products">Products</Link></li>
       <li><Link href="/cart">Cart</Link></li>
       <li><Link href="/checkout">Checkout</Link></li>
       <li><Link href="/Contact">Contact</Link></li>
+      <li><Link href="/location">Maps</Link></li>
       <li><Link href="/Profile">Profile</Link></li>
     </ul>
   </nav>

@@ -1,34 +1,91 @@
-.checkout-container, .confirmation-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    backdrop-filter: blur(8px);
-    background: rgba(255,255,255,0.3);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    font-family: sans-serif;
-  }
-  
-  .checkout-cart-list, .checkout-cart-list li {
-    list-style: none;
-    padding: 0.5rem 0;
-  }
-  
-  .checkout-cart-item span {
-    display: inline-block;
-    width: 25%;
-  }
-  
-  .checkout-container input,
-  .checkout-container button,
-  .confirmation-container button {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 1rem;
-    font-size: 1rem;
-  }
-  
-  .confirmation-container button {
-    cursor: pointer;
-  }
-  
+/* checkout.css */
+
+.checkout-container {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.checkout-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.checkout-cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.checkout-cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  transition: box-shadow 0.2s ease;
+}
+
+.checkout-cart-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-cart-item span {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #444;
+}
+
+.checkout-container h2 {
+  text-align: right;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  color: #111;
+}
+
+.checkout-container input[type="tel"] {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.checkout-container input[type="tel"]:focus {
+  border-color: #0070f3;
+  outline: none;
+}
+
+.checkout-container button {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout-container button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.checkout-container button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

@@ -1,90 +1,117 @@
+/* cart.css */
+
 .cart-page-container {
-    padding: 2rem;
-    backdrop-filter: blur(20px);
-    background: rgba(14, 3, 112, 0.05);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-    color: #0e0c0c;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .cart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .cart-title {
-    font-size: 2rem;
-    font-weight: 700;
-  }
-  
-  .cart-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .cart-item {
-    background: rgba(15, 3, 3, 0.1);
-    border-radius: 20px;
-    padding: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(8px);
-  }
-  
-  .cart-item:hover {
-    transform: translateY(-5px) scale(1.01);
-    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
-  }
-  
-  .cart-item-name {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: #050101;
-  }
-  
-  .cart-item-price {
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: #000000;
-  }
-  
-  .cart-item-quantity {
-    margin-bottom: 1rem;
-    color: #181818;
-  }
-  
-  .cart-item-image {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    margin-bottom: 0.5rem;
-  }
-  
-  .remove-from-cart-button {
-    background: #ff4081;
-    color: white;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-  }
-  
-  .remove-from-cart-button:hover {
-    background: #e91e63;
-    transform: scale(1.05);
-  }
-  
-  .total-price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #000000;
-    text-align: right;
-    margin-top: 1.5rem;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f7f9fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cart-page-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+}
+
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cart-item {
+  display: flex;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.cart-item:hover {
+  transform: scale(1.01);
+}
+
+.cart-item-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-right: 1px solid #eaeaea;
+}
+
+.cart-item-details {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cart-item-name {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+  color: #222;
+}
+
+.cart-item-price {
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 0.5rem;
+}
+
+.cart-item-quantity input {
+  width: 60px;
+  margin-left: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.remove-from-cart-button {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.3s;
+}
+
+.remove-from-cart-button:hover {
+  background-color: #cc0000;
+}
+
+.cart-summary {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.total-price {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.proceed-to-checkout-button {
+  background-color: #0070f3;
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.proceed-to-checkout-button:hover {
+  background-color: #005bb5;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 2rem;
+}

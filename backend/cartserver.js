@@ -19,7 +19,7 @@ mongoose.connect('mongodb://localhost:27017/ecommerce', { useNewUrlParser: true,
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Import the Product model
-const Product = require('./productServer').Product; // Ensure this path is correct
+const Product = require('./models/product'); // Corrected path to product model
 
 // Cart Item Schema
 const cartItemSchema = new mongoose.Schema({
@@ -46,7 +46,7 @@ app.post('/cart', async (req, res) => {
 app.get('/cart', async (req, res) => {
   try {
     const cartItems = await CartItem.find()
-      .populate('productId', 'name price'); // Populate name and price from Product model
+      .populate('productId', 'name price imageUrl'); // Populate name, price, imageUrl from Product model
 
     // Map the cart items to include product details
     const cartItemsWithDetails = cartItems.map(item => ({
@@ -55,7 +55,7 @@ app.get('/cart', async (req, res) => {
       name: item.productId.name,
       price: item.productId.price,
       quantity: item.quantity,
-      imageUrl : string,
+      imageUrl: item.productId.imageUrl,
     }));
 
     res.status(200).json(cartItemsWithDetails);
@@ -79,6 +79,7 @@ app.delete('/cart/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error.', error: error.message });
   }
 });
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Cart server is running on http://localhost:${PORT}`);
