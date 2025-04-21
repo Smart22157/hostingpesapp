@@ -1,68 +1,98 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import 'leaflet/dist/leaflet.css'; // Importing Leaflet CSS at the top level
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Importing the CSS for routing machine
+import '../../styles/location.css'; // Ensure this path is correct
 
-// Dynamically import the MapContainer and other components
-const MapContainerDynamic = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
-const TileLayerDynamic = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
-const MarkerDynamic = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-const PopupDynamic = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+const shopPosition: [number, number] = [-1.2921, 36.8219];
+const userPosition: [number, number] = [-1.1026, 37.0132];
 
-const shopPosition: [number, number] = [1.2921, 36.8219]; // Nairobi coordinates as example
-const destinationPosition: [number, number] = [-1.2921, 36.8219]; // Example destination coordinates
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiamVmZjIyMTU3IiwiYSI6ImNtOXJmZHAxMDBuZG0ycXNmeWQ2cWhybWkifQ.HwjXWQYz__GiXnYxlbYVLQ';
+
+interface MapInstance {
+  remove: () => void;
+}
+
+// Define a type for Icon.Default prototype including optional _getIconUrl property
+interface IconDefaultPrototype {
+  _getIconUrl?: () => void;
+}
 
 export default function ShopLocationPage() {
-  const mapRef = useRef<HTMLDivElement | null>(null); // Create a ref for the map container
+  const mapRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<MapInstance | null>(null); // Typed with interface including remove method
 
   useEffect(() => {
-    // Import Leaflet and Leaflet Routing Machine only in the browser
-    const L = require('leaflet');
-    require('leaflet-routing-machine');
+    // Check if the code is running in the browser
+    if (typeof window !== 'undefined') {
+      async function loadMap() {
+        // Dynamically import Leaflet only on client side
+        const L = (await import('leaflet')).default;
 
-    // Fix default icon issue with Leaflet in React
-    delete (L.Icon.Default.prototype as any)._getIconUrl; // Use 'as any' to bypass type checking
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
-      iconUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet/dist/images/marker-shadow.png',
-    });
+        // Fix Leaflet's default icon URLs to use CDN to avoid 404 errors
+        const iconDefaultPrototype = L.Icon.Default.prototype as IconDefaultPrototype;
+        delete iconDefaultPrototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon-2x.png',
+          iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+          shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+        });
 
-    if (mapRef.current) {
-      const map = L.map(mapRef.current).setView(shopPosition, 13); // Use the ref here
+        if (mapRef.current) {
+          // Check if the map is already initialized
+          if (mapInstanceRef.current) {
+            console.log('Map is already initialized.'); // Debug log
+            return; // Exit if the map is already initialized
+          }
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      }).addTo(map);
+          console.log('Initializing map...'); // Debug log
 
-      // Check if L.Routing is defined before using it
-      if (L.Routing) {
-        // Add routing control
-        const routingControl = L.Routing.control({
-          waypoints: [
-            L.latLng(shopPosition[0], shopPosition[1]), // Starting point
-            L.latLng(destinationPosition[0], destinationPosition[1]) // Destination point
-          ],
-          routeWhileDragging: true,
-        }).addTo(map);
-      } else {
-        console.error("Leaflet Routing Machine is not loaded.");
+          // Initialize the map
+          const map = L.map(mapRef.current).setView(shopPosition, 13);
+          mapInstanceRef.current = map;
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19,
+          }).addTo(map);
+
+          L.marker(shopPosition).addTo(map).bindPopup('PES Electrical - PR8J+5F Nairobi').openPopup();
+          L.marker(userPosition).addTo(map).bindPopup('Your Location').openPopup();
+
+          const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userPosition[1]},${userPosition[0]};${shopPosition[1]},${shopPosition[0]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`;
+
+          fetch(directionsUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.routes && data.routes.length > 0) {
+                const route = data.routes[0].geometry;
+                const routeLine = L.geoJSON(route, {
+                  style: { color: 'blue', weight: 4 },
+                }).addTo(map);
+                map.fitBounds(routeLine.getBounds());
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching directions:', error);
+            });
+        }
       }
 
-      // Cleanup on component unmount
+      loadMap();
+
       return () => {
-        map.remove();
+        if (mapInstanceRef.current) {
+          console.log('Cleaning up map...'); // Debug log
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        }
       };
     }
   }, []);
 
   return (
     <div style={{ height: '100vh', width: '100%' }}>
-      <h1>Shop Location</h1>
-      <div ref={mapRef} style={{ height: '90%', width: '100%' }} /> {/* Use the ref here */}
+      <h1>Shop Location with Directions</h1>
+      <div ref={mapRef} className="map-container" />
     </div>
   );
 }
