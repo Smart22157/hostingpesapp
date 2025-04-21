@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../../../styles/product.css';
 import '../../../styles/navbar.css';
-import AdminNavbar from '@/app/Navbar';
+import AdminNavbar from '../AdminNavbar';
 import Image from 'next/image'; // Import Image from next/image
 
 interface Product {
