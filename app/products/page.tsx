@@ -25,7 +25,7 @@ const ProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('hhttp://27.0.0.1:4040/products');
+      const res = await fetch('http://27.0.0.1:4040/products');
       if (!res.ok) throw new Error('Failed to fetch products');
       const data = await res.json();
       setProducts(data);
@@ -39,7 +39,7 @@ const ProductPage = () => {
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://21.0.0.1:4041/cart', {
+      const res = await fetch('http://27.0.0.1:4041/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -114,7 +114,7 @@ const ProductPage = () => {
             <p className="product-price">Ksh{product.price.toFixed(2)}</p>
             {product.imageUrl && (
               <Image
-                src={`http://localhost:3000${product.imageUrl}`}
+                src={"product.imageUrl"}
                 alt={product.name}
                 width={200}
                 height={200}
