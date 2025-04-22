@@ -25,7 +25,7 @@ const ProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://27.0.0.1:4040/products');
+      const res = await fetch('http://138.68.181.72:4040/products');
       if (!res.ok) throw new Error('Failed to fetch products');
       const data = await res.json();
       setProducts(data);
@@ -39,7 +39,7 @@ const ProductPage = () => {
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://27.0.0.1:4041/cart', {
+      const res = await fetch('http://138.68.181.72:4041/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +60,7 @@ const ProductPage = () => {
   const handleAddToCart = async (product: Product) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://21.0.0.1:4041/cart', {
+      const response = await fetch('http://138.68.181.72:4041/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,10 +111,10 @@ const ProductPage = () => {
           <div key={product._id} className="product-card">
             <h3 className="product-name">{product.name}</h3>
             <p className="product-category">{product.category}</p>
-            <p className="product-price">Ksh{product.price.toFixed(2)}</p>
+            <p className="product-price">Ksh {product.price.toFixed(2)}</p>
             {product.imageUrl && (
               <Image
-                src={"product.imageUrl"}
+                src={product.imageUrl}
                 alt={product.name}
                 width={200}
                 height={200}
