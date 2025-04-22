@@ -41,8 +41,9 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
+// Connect to MongoDB Atlas only
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB connected'))
+  .then(() => console.log('✅ MongoDB connected to Atlas'))
   .catch((err) => console.error('❌ MongoDB error:', err));
 
 // Multer for uploads

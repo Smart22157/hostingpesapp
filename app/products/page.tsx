@@ -25,7 +25,7 @@ const ProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5001/products');
+      const res = await fetch('hhttp://27.0.0.1:4040/products');
       if (!res.ok) throw new Error('Failed to fetch products');
       const data = await res.json();
       setProducts(data);
@@ -39,7 +39,7 @@ const ProductPage = () => {
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5002/cart', {
+      const res = await fetch('http://21.0.0.1:4041/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +60,7 @@ const ProductPage = () => {
   const handleAddToCart = async (product: Product) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5002/cart', {
+      const response = await fetch('http://21.0.0.1:4041/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

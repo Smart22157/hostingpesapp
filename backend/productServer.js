@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -9,20 +11,25 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3000', // Replace with your frontend URL in production
   credentials: true,
 }));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/ecommerce', { useNewUrlParser: true, useUnifiedTopology: true });
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('✅ MongoDB connected to Atlas'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Product Schema
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: { type: String },
+  description: String,
   price: { type: Number, required: true },
-  category: { type: String },
-  imageUrl: { type: String },
+  category: String,
+  imageUrl: String,
   quantity: { type: Number, default: 0 },
   totalStock: { type: Number, default: 0 },
   soldPerWeek: { type: Number, default: 0 },
@@ -32,7 +39,7 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema);
 
-// Sample products to add to the database with image URLs
+// Sample Products
 const sampleProducts = [
   { name: 'Pump', description: 'High-efficiency pump', price: 150, category: 'Pumps', quantity: 100, imageUrl: '/Productimg/pump.png' },
   { name: 'Pipe', description: 'Durable PVC pipe', price: 50, category: 'Pipes', quantity: 200, imageUrl: '/Productimg/pipe.jpg' },
@@ -55,63 +62,66 @@ const sampleProducts = [
   { name: 'Oven', description: 'Convection oven', price: 300, category: 'Kitchen', quantity: 20, imageUrl: '/Productimg/oven.jpg' },
   { name: 'Grill', description: 'Electric grill', price: 100, category: 'Kitchen', quantity: 30, imageUrl: '/Productimg/grill.jpg' },
   { name: 'Food Processor', description: 'Multi-functional food processor', price: 150, category: 'Kitchen', quantity: 25, imageUrl: '/Productimg/foodprocessor.jpg' },
-  { name: 'Bar', description: 'High-quality bar', price: 20, category: 'Bars', quantity: 20, imageUrl: '/Productimg/bar.jpg' }, // Added 20 bars
+  { name: 'Bar', description: 'High-quality bar', price: 20, category: 'Bars', quantity: 20, imageUrl: '/Productimg/bar.jpg' },
 ];
 
-// Route to seed the database with sample products
+// Seed Route
 app.post('/seed-products', async (req, res) => {
   try {
-    await Product.deleteMany({}); // Clear existing products
-    await Product.insertMany(sampleProducts); // Insert sample products
+    await Product.deleteMany({});
+    await Product.insertMany(sampleProducts);
     res.status(201).json({ message: 'Sample products created successfully.' });
   } catch (error) {
-    console.error('Error seeding products:', error);
+    console.error('Seeding error:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
-// Update product route
+// Update Product
 app.put('/products/:id', async (req, res) => {
-  const { name, description, price, category, quantity, imageUrl } = req.body;
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, { name, description, price, category, quantity, imageUrl }, { new: true });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found.' });
-    }
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!product) return res.status(404).json({ message: 'Product not found.' });
+
     res.status(200).json({ message: 'Product updated successfully.', product });
   } catch (error) {
-    console.error('Update product error:', error);
+    console.error('Update error:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
-// Routes
+// Create Product
 app.post('/products', async (req, res) => {
-  const { name, description, price, category, quantity, imageUrl } = req.body;
+  const { name, price } = req.body;
   if (!name || !price) {
     return res.status(400).json({ message: 'Name and price are required.' });
   }
   try {
-    const product = new Product({ name, description, price, category, quantity, imageUrl });
+    const product = new Product(req.body);
     await product.save();
     res.status(201).json({ message: 'Product created successfully.', product });
   } catch (error) {
-    console.error('Create product error:', error);
+    console.error('Create error:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
+// Get All Products
 app.get('/products', async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
     res.status(200).json(products);
   } catch (error) {
-    console.error('Get products error:', error);
+    console.error('Get error:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
 
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(`Product server is running on http://localhost:${PORT}`);
+  console.log(`🛍️ Product server running on http://localhost:${PORT}`);
 });

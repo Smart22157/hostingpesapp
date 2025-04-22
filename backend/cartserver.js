@@ -1,25 +1,30 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 5002; // Use a different port for the cart server
+const PORT = process.env.PORT || 5002;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3000', // or your deployed frontend URL
   credentials: true,
 }));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/ecommerce', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Connect to MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('✅ MongoDB connected to Atlas'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Import the Product model
-const Product = require('./models/product'); // Corrected path to product model
+// Product Model (adjust path if needed)
+const Product = require('./models/product');
 
 // Cart Item Schema
 const cartItemSchema = new mongoose.Schema({
@@ -46,9 +51,8 @@ app.post('/cart', async (req, res) => {
 app.get('/cart', async (req, res) => {
   try {
     const cartItems = await CartItem.find()
-      .populate('productId', 'name price imageUrl'); // Populate name, price, imageUrl from Product model
+      .populate('productId', 'name price imageUrl');
 
-    // Map the cart items to include product details
     const cartItemsWithDetails = cartItems.map(item => ({
       _id: item._id,
       productId: item.productId._id,
@@ -80,7 +84,7 @@ app.delete('/cart/:id', async (req, res) => {
   }
 });
 
-// Start the server
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Cart server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Cart server running on http://localhost:${PORT}`);
 });
