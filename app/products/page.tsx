@@ -39,7 +39,7 @@ const ProductPage = () => {
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://138.68.181.72:4041/cart', {
+      const res = await fetch('/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,10 +48,10 @@ const ProductPage = () => {
       const data = await res.json();
       setCartItems(data);
     } catch (err) {
-      console.error((err as Error).message);
+      console.error(err instanceof Error ? err.message : String(err));
     }
   };
-
+  
   useEffect(() => {
     fetchProducts();
     fetchCartItems();
